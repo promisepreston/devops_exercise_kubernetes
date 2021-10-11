@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webserver-deployment
+  labels:
+    app: arca-webserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: arca-webserver
+  template:
+    metadata:
+      labels:
+        app: arca-webserver
+    spec:
+      containers:
+      - name: arca-webserver
+        image: arca-webserver
+        ports:
+        - containerPort: 3000
+        resources:
+            limits:
+              memory: 512Mi
+              cpu: '1'
+            requests:
+              memory: 256Mi
+              cpu: '0.2'
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: arca-webserver-service
+spec:
+  selector:
+    app: arca-webserver
+  type: ClusterIP
+  ports:
+  - protocol: TCP
+    port: 3000
+    targetPort: 3000
